@@ -3,5 +3,6 @@
 python -m venv venv
 source venv/bin/activate
 
-# install dependencies as you need
+pip install -r requirements.txt
+pip freeze
 ```
