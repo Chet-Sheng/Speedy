@@ -1,0 +1,7 @@
+name: paperqa_speedy          # Name of the conda environment
+channels:
+  - defaults          # Default channel for conda packages
+dependencies:
+  - python=3.11       # Specify the Python version
+  - pip:
+    - paper-qa[zotero]
