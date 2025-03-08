@@ -1,0 +1,18 @@
+[project]
+name = "python"
+version = "0.1.0"
+description = "Python Playground"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "dotenv>=0.9.9",
+    "factory-boy>=3.3.3",
+    "pydantic>=2.10.6",
+    "pydantic-settings>=2.8.1",
+]
+
+[dependency-groups]
+dev = [
+    "ipython>=9.0.2",
+    "pytest>=8.3.5",
+]
