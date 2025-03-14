@@ -1,0 +1,12 @@
+app_name = "deepsearch-toml"
+api_key="api_key_toml"
+
+[data_loader_config] 
+batch_size = 100 
+local_data_dir = "/path/to/artifacts/toml"
+
+    [data_loader_config.data_config] 
+    s3_bucket = "my-bucket" 
+    s3_prefix = "path-to-data" 
+    local_data_dir = "my-local-path" 
+    max_workers = 6 

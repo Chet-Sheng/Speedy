@@ -1,0 +1,11 @@
+# app_config:
+app_name: "deepsearch-yaml"
+api_key: "my-api-key"
+data_loader_config:
+  batch_size: 100
+  local_data_dir: "/path/to/artifacts"
+  data_config:
+    s3_bucket: "my-bucket-yaml"
+    s3_prefix: "path-to-data"
+    local_data_dir: "my-local-path"
+    max_workers: 6
