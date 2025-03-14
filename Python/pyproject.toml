@@ -9,10 +9,12 @@ dependencies = [
     "factory-boy>=3.3.3",
     "pydantic>=2.10.6",
     "pydantic-settings>=2.8.1",
+    "pyyaml>=6.0.2",
 ]
 
 [dependency-groups]
 dev = [
+    "ipykernel>=6.29.5",
     "ipython>=9.0.2",
     "pytest>=8.3.5",
 ]
