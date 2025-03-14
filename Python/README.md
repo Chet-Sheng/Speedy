@@ -9,7 +9,7 @@ brew install uv
 uv init
 
 # create venv and sync dependencies
-uv sync
+uv sync --all-extras
 
 uv venv
 
@@ -18,8 +18,16 @@ uv add --dev <pkg>
 
 source .venv/bin/activate
 deactivate
+
+
+# python kernel path:
+./Python/.venv/bin/python
+
+# creating ipykernel:
+uv run ipython kernel install --user --env VIRTUAL_ENV $(pwd)/.venv --name=speedy_python
 ```
 
+## Misc
 Suggests adding below functons to `~/.zshrc`
 ```bash
 uvsh() {
@@ -46,3 +54,15 @@ uvsh() {
     . "${activator}"
 }
 ```
+
+### VSCode trick to select all keys
+You can use VS Code’s regex Find feature to select all keys. For example:
+1. Open the `.env` file.
+2. Press Cmd+F to open the search bar.
+3. Enable regex search by clicking the .* icon.
+4. Enter this regex pattern to match keys (assuming keys are at the start of a line before the equals sign):
+    ```bash
+    ^\s*([A-Za-z0-9_]+)\s*=
+    ```
+5. Click the "Select All Matches" button (or press `Cmd+Shift+L`) to create multi-cursors on all matched keys.
+Now you can modify them as needed.
