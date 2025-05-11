@@ -30,28 +30,30 @@ uv run ipython kernel install --user --env VIRTUAL_ENV $(pwd)/.venv --name=speed
 ## Misc
 Suggests adding below functons to `~/.zshrc`
 ```bash
+# Function definition - takes an optional argument
 uvsh() {
+    # Set venv_name to the first argument ($1) if provided, otherwise use '.venv'
+    # ${1:-'.venv'} means "use $1 if it exists, otherwise use '.venv'"
     local venv_name=${1:-'.venv'}
-    venv_name=${venv_name//\//} # remove trailing slashes (Linux)
-    venv_name=${venv_name//\\/} # remove trailing slashes (Windows)
-
-    local venv_bin=
-    if [[ -d ${WINDIR} ]]; then
-        venv_bin='Scripts/activate'
-    else
-        venv_bin='bin/activate'
-    fi
-
-    local activator="${venv_name}/${venv_bin}"
-    echo "[INFO] Activate Python venv: ${venv_name} (via ${activator})"
-
+    
+    # Construct the full path to the activate script
+    # On Mac, virtual environments always use bin/activate
+    local activator="${venv_name}/bin/activate"
+    
+    # Check if the activate script exists
+    # [[ ! -f ${activator} ]] tests if the file does NOT exist
     if [[ ! -f ${activator} ]]; then
+        # If file doesn't exist, print error and exit function
         echo "[ERROR] Python venv not found: ${venv_name}"
         return
     fi
-
-    # shellcheck disable=SC1090
-    . "${activator}"
+    
+    # Print informative message about which venv is being activated
+    echo "[INFO] Activating Python venv: ${venv_name}"
+    
+    # Source (activate) the virtual environment
+    # source is equivalent to . (dot) in shell scripts
+    source "${activator}"
 }
 ```
 
