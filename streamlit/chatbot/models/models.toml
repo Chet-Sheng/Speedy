@@ -1,0 +1,18 @@
+[openai]
+name = "openai"
+requires_base_url = true
+models = [
+    "o3",
+    "o4-mini",
+    "o3-mini",
+    "gpt-4.1",
+]
+
+[anthropic]
+name = "anthropic"
+requires_base_url = false
+models = [
+    "claude-3-opus-20240229",
+    "claude-3-sonnet-20240229",
+    "claude-3-haiku-20240307",
+] 
