@@ -1,7 +1,9 @@
 from importlib import import_module
 import logging
+from typing import Dict, Type, Iterable
 import pkgutil
-from typing import Dict, Iterable, Type
+from importlib import import_module
+
 from .config import ModelConfig
 from .types import ModelName, EmbedderName, SplitterName, RerankerName, FilterName
 
@@ -12,6 +14,35 @@ EMBEDDER_REGISTRY: Dict[str, Type] = {}
 SPLITTER_REGISTRY: Dict[str, Type] = {}
 RERANKER_REGISTRY: Dict[str, Type] = {}
 FILTER_REGISTRY: Dict[str, Type] = {}
+
+# alternative implementation to auto_discover_modules
+def autodiscover(
+        packages: Iterable[str] = ("dynamic_model_registry.models","dynamic_model_registry.splitters",)
+    ) -> None:
+    """
+    Import every sub-module in each package listed.
+
+    Parameters
+    ----------
+    packages : Iterable[str]
+        One or more dotted-path package names whose modules contain
+        `@register_*` decorators.
+
+    Calling this *populates* all REGISTRY dictionaries as a side-effect.
+    It is safe (and cheap) to call more than once; Python caches imports.
+    """
+    for pkg_name in packages:
+        pkg = import_module(pkg_name)               # raises if the package is missing
+
+        # Only packages (directories) have __path__.
+        if not hasattr(pkg, "__path__"):
+            raise ValueError(f"{pkg_name!r} is not a package")
+
+        # Walk the package tree, importing every module & sub-package.
+        # └─  (prefix ensures we get 'myproj.models.foo' not just 'foo')
+        for _, mod_name, _ in pkgutil.walk_packages(pkg.__path__, prefix=pkg.__name__ + "."):
+            import_module(mod_name)
+
 
 def register_model(name: ModelName):
     def decorator(cls):
@@ -60,28 +91,3 @@ def build_model(config: ModelConfig):
     logger.debug("Instantiating model with components")
     return model_class(embedder=embedder, splitter=splitter, reranker=reranker, filter_=filter_) 
 
-
-def auto_discover_modules(
-    packages: Iterable[str] = [
-        "dynamic_model_registry.embedders",
-    ],
-) -> None:
-    """Import every sub-module in each package listed.
-
-    Calling this populates all REGISTERY dictionaries as a side-effect.
-    It is safe (and cheap) to call more than onces; Python caches imports.
-    Args:
-        packages (Iterable[str], optional): One or more dotted-path package names whose modules contains
-            `register_*` decorators.
-    """
-    for pkg_name in packages:
-        pkg = import_module(pkg_name)
-
-        if not hasattr(pkg, "__path__"):
-            raise ValueError(f"Package {pkg_name} is not a valid package.")
-
-        # Walk the package tree, importing every module & sub-package.
-        for _, module_name, _ispkg in pkgutil.walk_packages(
-            pkg.__path__, prefix=pkg.__name__ + "."
-        ):
-            import_module(module_name)
