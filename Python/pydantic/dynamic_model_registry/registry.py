@@ -1,5 +1,9 @@
 import logging
-from typing import Dict, Type
+from typing import Dict, Type, Iterable
+import pkgutil
+from importlib import import_module
+
+
 from .config import ModelConfig
 from .types import ModelName, EmbedderName, SplitterName, RerankerName, FilterName
 
@@ -10,6 +14,35 @@ EMBEDDER_REGISTRY: Dict[str, Type] = {}
 SPLITTER_REGISTRY: Dict[str, Type] = {}
 RERANKER_REGISTRY: Dict[str, Type] = {}
 FILTER_REGISTRY: Dict[str, Type] = {}
+
+
+def autodiscover(
+        packages: Iterable[str] = ("dynamic_model_registry.models","dynamic_model_registry.splitters",)
+    ) -> None:
+    """
+    Import every sub-module in each package listed.
+
+    Parameters
+    ----------
+    packages : Iterable[str]
+        One or more dotted-path package names whose modules contain
+        `@register_*` decorators.
+
+    Calling this *populates* all REGISTRY dictionaries as a side-effect.
+    It is safe (and cheap) to call more than once; Python caches imports.
+    """
+    for pkg_name in packages:
+        pkg = import_module(pkg_name)               # raises if the package is missing
+
+        # Only packages (directories) have __path__.
+        if not hasattr(pkg, "__path__"):
+            raise ValueError(f"{pkg_name!r} is not a package")
+
+        # Walk the package tree, importing every module & sub-package.
+        # └─  (prefix ensures we get 'myproj.models.foo' not just 'foo')
+        for _, mod_name, _ in pkgutil.walk_packages(pkg.__path__, prefix=pkg.__name__ + "."):
+            importlib.import_module(mod_name)
+
 
 def register_model(name: ModelName):
     def decorator(cls):
