@@ -14,6 +14,7 @@ This project provides a flexible way to register and instantiate different types
 - Clean separation of concerns
 - `from_config` in [embeders/base.py](embedders/base.py) decouples config and class constructor, made registry pattern works better
 - run `auto_discover_modules` in [registry.py](registry.py) in the right place can solve the `plugin-registry` problem of decorator only run when the related module is imported. We can end up with eg. empty `EMBEDDER_REGISTRY` dictionary.
+    - this is a common problem with `plugin/registry architecture`
 
 
 ## Architecture
