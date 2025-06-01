@@ -4,10 +4,13 @@ Basic Async Patterns in Python
 This file demonstrates fundamental asyncio patterns with practical examples.
 Each pattern shows both correct and incorrect usage.
 
+
 Jupyter/IPython runs its own event loop, so:
 - `asyncio.get_running_loop()` returns Jupyter's loop
 - `loop.run_until_complete()` fails because the loop is already running
 - Direct `await` works because it uses the existing loop
+- `asyncio.run()` creates a new event loop, runs the coroutine, then closes the loop
+    - it won't work in Jupyter/IPython because it tries to create a new loop
 """
 
 import asyncio
