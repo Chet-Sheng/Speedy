@@ -1,0 +1,12 @@
+[project]
+name = "langgraph_hub"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "ipykernel>=6.29.5",
+    "ipython>=9.3.0",
+    "langchain-core>=0.3.63",
+    "langgraph>=0.4.8",
+]
