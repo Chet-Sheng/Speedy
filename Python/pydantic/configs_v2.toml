@@ -1,4 +1,4 @@
-app_name = "deepsearch-toml"
+app_name = "deepsearch-toml-v2"
 api_key="api_key_toml"
 
 [data_loader_config] 
