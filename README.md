@@ -33,4 +33,5 @@ uvsh() {
     # shellcheck disable=SC1090
     . "${activator}"
 }
+
 ```
